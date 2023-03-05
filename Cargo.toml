@@ -5,7 +5,7 @@ edition = '2021'
 [dependencies.tokio]
 version = '1'
 features = [
-    'fs',                   # Asyn file system access
+    'fs',                   # Async file system access
     'io-util',              # enable tokio_util::io https://docs.rs/tokio-util/latest/tokio_util/io/index.html
     'io-std',               # enable tokio::io
     'macros',               # Tokio macros
@@ -13,7 +13,7 @@ features = [
     'parking_lot',          # enable parkin_lot crate https://docs.rs/parking_lot/latest/parking_lot/
     'process',              # spawn child processes
     'rt',                   # single tread scheduler
-    'rt-multi-thread',      # multy tread scheduler
+    'rt-multi-thread',      # multi tread scheduler
     'signal',               # handle system signals
     'sync',                 # enable tokio::sync
     'time',                 # enable tokio::time

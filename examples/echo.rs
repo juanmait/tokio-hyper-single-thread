@@ -1,6 +1,17 @@
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use tokio::net::TcpListener;
 
+/// Run this example:
+/// ```sh
+/// cargo run --example echo
+/// ```
+///
+/// Send messages using a tcp client. Example
+/// ```sh
+/// nc localhost 8080
+/// > hello!
+/// > hello!
+/// ```
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let listener = TcpListener::bind("127.0.0.1:8080").await?;

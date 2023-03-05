@@ -12,7 +12,7 @@ All main features are listed and enabled in the `Cargo.toml` file. These can be 
 discretion.
 
 ```toml
-'fs',                   # Asyn file system access
+'fs',                   # Async file system access
 'io-util',              # enable tokio_util::io
 'io-std',               # enable tokio::io
 'macros',               # Tokio macros
@@ -20,7 +20,7 @@ discretion.
 'parking_lot',          # enable parkin_lot crate
 'process',              # spawn child processes
 'rt',                   # single tread scheduler
-'rt-multi-thread',      # multy tread scheduler
+'rt-multi-thread',      # multi tread scheduler
 'signal',               # handle system signals
 'sync',                 # enable tokio::sync
 'time',                 # enable tokio::time

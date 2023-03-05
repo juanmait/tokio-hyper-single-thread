@@ -1,8 +1,22 @@
 [package]
-name = "tokio-project"
-version = "0.1.0"
-edition = "2021"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
-[dependencies]
+name = 'tokio-project'
+version = '0.1.0'
+edition = '2021'
+[dependencies.tokio]
+version = '1'
+features = [
+    'fs',                   # Asyn file system access
+    'io-util',              # enable tokio_util::io https://docs.rs/tokio-util/latest/tokio_util/io/index.html
+    'io-std',               # enable tokio::io
+    'macros',               # Tokio macros
+    'net',                  # TCP/UDP/Unix bindings
+    'parking_lot',          # enable parkin_lot crate https://docs.rs/parking_lot/latest/parking_lot/
+    'process',              # spawn child processes
+    'rt',                   # single tread scheduler
+    'rt-multi-thread',      # multy tread scheduler
+    'signal',               # handle system signals
+    'sync',                 # enable tokio::sync
+    'time',                 # enable tokio::time
+    'tracing',              # enable tracing crate https://github.com/tokio-rs/tracing
+    'mio',                  # low-level I/O features
+]

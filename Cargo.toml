@@ -20,3 +20,19 @@ features = [
     'tracing',              # enable tracing crate https://github.com/tokio-rs/tracing
     'mio',                  # low-level I/O features
 ]
+
+[dependencies.axum]
+version = '0.6.10'
+
+[dependencies.hyper]
+version = '1.0.0-rc.3'
+features = [
+    'client',
+    'http1',
+]
+
+[dependencies.http-body-util]
+version = '0.1.0-rc.2'
+
+[dependencies.bytes]
+version = '1.4.0'

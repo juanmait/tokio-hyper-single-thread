@@ -6,7 +6,7 @@ A starting point for a [tokio.rs] project. Check out the [crate's documentation]
 [crate's documentation]: https://docs.rs/tokio/latest/tokio/◊
 [tokio.rs]: https://docs.rs/crate/tokio/latest
 
-## Features
+## Tokio Features
 
 All main features are listed and enabled in the `Cargo.toml` file. These can be enabled at your
 discretion.
@@ -31,3 +31,14 @@ discretion.
 Checkout the [tokio features] docs.
 
 [tokio features]: https://docs.rs/crate/tokio/latest/features
+
+
+## Docs
+
+[bytes], [hyper], [http-body-util], [tokio], [axum]
+
+[hyper]: https://docs.rs/hyper
+[http-body-util]: https://docs.rs/http-body-util
+[bytes]: https://docs.rs/bytes
+[tokio]: https://docs.rs/tokio
+[axum]: https://docs.rs/axum

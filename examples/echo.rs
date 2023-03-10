@@ -2,11 +2,13 @@ use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use tokio::net::TcpListener;
 
 /// Run this example:
+///
 /// ```sh
 /// cargo run --example echo
 /// ```
 ///
 /// Send messages using a tcp client. Example
+///
 /// ```sh
 /// nc localhost 8080
 /// > hello!

@@ -28,16 +28,17 @@ Checkout the [tokio features] docs.
 
 | Crate               | Description                                                                       |
 | ------------------- | --------------------------------------------------------------------------------- |
+| [axum]              | -                                                                                 |
 | [bytes]             | -                                                                                 |
 | [hyper]             | -                                                                                 |
-| [tokio]             | -                                                                                 |
-| [axum]              | -                                                                                 |
+| [http-body]         | Asynchronous HTTP request or response body                                        |
+| [http-body-util]    | Utilities for [http-body]                                                         |
 | [log]               | A lightweight logging facade.                                                     |
 | [env_logger]        | A logger configured via env vars, to use with the logging facade exposed by [log] |
 | [pretty_env_logger] | Writes to standard error with nice colored output for log levels.                 |
 | [tokio-macros]      | -                                                                                 |
-| [http-body]         | Asynchronous HTTP request or response body                                        |
-| [http-body-util]    | Utilities for [http-body]                                                         |
+| [tokio]             | -                                                                                 |
+| [url]               | implementation of the URL Standard for the Rust programming language.             |
 
 [hyper]: https://docs.rs/hyper
 [http-body-util]: https://docs.rs/http-body-util
@@ -49,3 +50,4 @@ Checkout the [tokio features] docs.
 [pretty_env_logger]: https://docs.rs/pretty_env_logger
 [tokio-macros]: https://docs.rs/tokio-macros
 [http-body]: https://docs.rs/http-body
+[url]: https://docs.rs/url

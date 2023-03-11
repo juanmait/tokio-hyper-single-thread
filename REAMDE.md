@@ -1,11 +1,3 @@
-# Tokio Project
-
-A starting point for a [tokio.rs] project. Check out the [crate's documentation] for more.
-
-[tokio docs]: https://docs.rs/tokio/latest/tokio/
-[crate's documentation]: https://docs.rs/tokio/latest/tokio/◊
-[tokio.rs]: https://docs.rs/crate/tokio/latest
-
 ## Tokio Features
 
 All main features are listed and enabled in the `Cargo.toml` file. These can be enabled at your
@@ -32,13 +24,15 @@ Checkout the [tokio features] docs.
 
 [tokio features]: https://docs.rs/crate/tokio/latest/features
 
+## Ecosystem
 
-## Docs
-
-[bytes], [hyper], [http-body-util], [tokio], [axum]
+[bytes], [hyper], [http-body-util], [tokio], [axum], [pretty_env_logger], [tokio-macros], [env_logger]
 
 [hyper]: https://docs.rs/hyper
 [http-body-util]: https://docs.rs/http-body-util
 [bytes]: https://docs.rs/bytes
 [tokio]: https://docs.rs/tokio
 [axum]: https://docs.rs/axum
+[pretty_env_logger]: https://docs.rs/pretty_env_logger/latest/pretty_env_logger/
+[tokio-macros]: https://docs.rs/tokio-macros
+[env_logger]: https://docs.rs/env_logger

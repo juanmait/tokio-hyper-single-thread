@@ -5,20 +5,43 @@ edition = '2021'
 [dependencies.tokio]
 version = '1'
 features = [
-    'fs',                   # Async file system access
-    'io-util',              # enable tokio_util::io https://docs.rs/tokio-util/latest/tokio_util/io/index.html
-    'io-std',               # enable tokio::io
-    'macros',               # Tokio macros
-    'net',                  # TCP/UDP/Unix bindings
-    'parking_lot',          # enable parkin_lot crate https://docs.rs/parking_lot/latest/parking_lot/
-    'process',              # spawn child processes
-    'rt',                   # single tread scheduler
-    'rt-multi-thread',      # multi tread scheduler
-    'signal',               # handle system signals
-    'sync',                 # enable tokio::sync
-    'time',                 # enable tokio::time
-    'tracing',              # enable tracing crate https://github.com/tokio-rs/tracing
-    'mio',                  # low-level I/O features
+    # Async file system access
+    # 'fs',
+
+    'io-util', # enable tokio_util::io https://docs.rs/tokio-util/latest/tokio_util/io/index.html
+    'io-std',  # enable tokio::io
+    'macros',  # Tokio macros
+    'net',     # TCP/UDP/Unix bindings
+
+    # Enable crate (https://docs.rs/parking_lot).
+    # Faster and smaller implementations of Mutex, RwLock, Condvar and Once
+    'parking_lot',
+
+
+    # spawn child processes
+    # 'process',
+
+    # single tread scheduler
+    'rt',
+
+    # multi tread scheduler
+    # 'rt-multi-thread',
+
+    # handle system signals
+    # 'signal',
+
+    # Enable tokio::sync
+    # Synchronization primitives for use in asynchronous contexts.
+    # 
+    # https://docs.rs/tokio/latest/tokio/sync/index.html
+    'sync', 
+
+    'time', # enable tokio::time
+
+    # Enable tracing: https://github.com/tokio-rs/tracing
+    'tracing',
+
+    'mio', # low-level I/O features
 ]
 
 [dependencies.axum]
@@ -27,12 +50,31 @@ version = '0.6.10'
 [dependencies.hyper]
 version = '1.0.0-rc.3'
 features = [
+    # Enables the `client` module
+    # https://docs.rs/hyper/latest/hyper/client/index.html
     'client',
+
+    # Enables the `server` module.
+    # https://docs.rs/hyper/latest/hyper/server/index.html
+    'server',
+
+    # Feature server requires http1 or http2
+    # https://docs.rs/hyper/latest/hyper/server/index.html
     'http1',
 ]
 
 [dependencies.http-body-util]
 version = '0.1.0-rc.2'
 
+# Bytes is an efficient container for storing and operating on
+# contiguous slices of memory.
 [dependencies.bytes]
 version = '1.4.0'
+
+# https://docs.rs/pretty_env_logger
+# A logger configured via an environment variable which
+# writes to standard error with nice colored output for
+# log levels.
+# This crate uses env_logger internally,
+[dependencies.pretty_env_logger]
+version = "0.4.0"

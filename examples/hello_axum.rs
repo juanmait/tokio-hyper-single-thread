@@ -9,7 +9,7 @@
 use axum::{response::Html, routing::get, Router};
 use std::net::SocketAddr;
 
-#[tokio::main]
+#[tokio::main(flavor = "current_thread")]
 async fn main() {
     // build our application with a route
     let app = Router::new().route("/", get(handler));

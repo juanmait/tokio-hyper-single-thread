@@ -4,6 +4,9 @@
 //! RUST_LOG=debug cargo run --example hyper_server
 //!
 //! curl http://localhost:3000
+//!
+//! # JSON Post request
+//! curl -X POST http://localhost:3000 -H "Content-Type: application/json" -d '{"Id": 79, "status": 3}'  
 //! ```
 //!
 #![deny(warnings)]

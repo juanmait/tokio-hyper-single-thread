@@ -26,13 +26,26 @@ Checkout the [tokio features] docs.
 
 ## Ecosystem
 
-[bytes], [hyper], [http-body-util], [tokio], [axum], [pretty_env_logger], [tokio-macros], [env_logger]
+| Crate               | Description                                                                       |
+| ------------------- | --------------------------------------------------------------------------------- |
+| [bytes]             | -                                                                                 |
+| [hyper]             | -                                                                                 |
+| [tokio]             | -                                                                                 |
+| [axum]              | -                                                                                 |
+| [log]               | A lightweight logging facade.                                                     |
+| [env_logger]        | A logger configured via env vars, to use with the logging facade exposed by [log] |
+| [pretty_env_logger] | Writes to standard error with nice colored output for log levels.                 |
+| [tokio-macros]      | -                                                                                 |
+| [http-body]         | Asynchronous HTTP request or response body                                        |
+| [http-body-util]    | Utilities for [http-body]                                                         |
 
 [hyper]: https://docs.rs/hyper
 [http-body-util]: https://docs.rs/http-body-util
 [bytes]: https://docs.rs/bytes
 [tokio]: https://docs.rs/tokio
 [axum]: https://docs.rs/axum
-[pretty_env_logger]: https://docs.rs/pretty_env_logger/latest/pretty_env_logger/
-[tokio-macros]: https://docs.rs/tokio-macros
+[log]: https://docs.rs/log
 [env_logger]: https://docs.rs/env_logger
+[pretty_env_logger]: https://docs.rs/pretty_env_logger
+[tokio-macros]: https://docs.rs/tokio-macros
+[http-body]: https://docs.rs/http-body

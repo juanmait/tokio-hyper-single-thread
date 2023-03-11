@@ -34,7 +34,7 @@ features = [
     # Synchronization primitives for use in asynchronous contexts.
     # 
     # https://docs.rs/tokio/latest/tokio/sync/index.html
-    'sync', 
+    'sync',
 
     'time', # enable tokio::time
 
@@ -63,6 +63,7 @@ features = [
     'http1',
 ]
 
+# https://docs.rs/http-body-util
 [dependencies.http-body-util]
 version = '0.1.0-rc.2'
 
@@ -78,3 +79,8 @@ version = '1.4.0'
 # This crate uses env_logger internally,
 [dependencies.pretty_env_logger]
 version = "0.4.0"
+
+
+# https://docs.rs/log
+[dependencies.log]
+version = "0.4"

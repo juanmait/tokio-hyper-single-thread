@@ -8,29 +8,43 @@ use std::future::Future;
 use std::pin::Pin;
 use std::rc::Rc;
 
+type FullBytes = Response<Full<Bytes>>;
+
 pub struct Svc {
     pub counter: Rc<Cell<i32>>,
 }
 
+impl Svc {
+    const NOT_FOUND: &str = "NOT_FOUND";
+
+    fn mk_response(&self, s: String) -> Result<FullBytes, hyper::Error> {
+        Ok(Response::builder().body(Full::new(Bytes::from(s))).unwrap())
+    }
+
+    fn not_found() -> Result<FullBytes, hyper::Error> {
+        Ok(Response::builder()
+            .body(Full::new(Bytes::from(Svc::NOT_FOUND)))
+            .unwrap())
+    }
+}
+
 impl Service<Request<IncomingBody>> for Svc {
-    type Response = Response<Full<Bytes>>;
+    type Response = FullBytes;
     type Error = hyper::Error;
-    type Future = Pin<Box<dyn Future<Output = Result<Self::Response, Self::Error>> + Send>>;
+    type Future = Pin<Box<dyn Future<Output = Result<Self::Response, Self::Error>>>>;
 
     fn call(&mut self, req: Request<IncomingBody>) -> Self::Future {
-        fn mk_response(s: String) -> Result<Response<Full<Bytes>>, hyper::Error> {
-            Ok(Response::builder().body(Full::new(Bytes::from(s))).unwrap())
-        }
-
         let res = match req.uri().path() {
-            "/" => mk_response(format!("home! counter = {:?}", self.counter)),
-            "/posts" => mk_response(format!("posts, of course! counter = {:?}", self.counter)),
-            "/authors" => mk_response(format!(
+            "/" => self.mk_response(format!("home! counter = {:?}", self.counter)),
+            "/posts" => self.mk_response(format!("posts, of course! counter = {:?}", self.counter)),
+            "/authors" => self.mk_response(format!(
                 "authors extraordinare! counter = {:?}",
                 self.counter
             )),
             // Return the 404 Not Found for other routes, and don't increment counter.
-            _ => return Box::pin(async { mk_response("oh no! not found".into()) }),
+            _ => {
+                return Box::pin(async { Svc::not_found() });
+            }
         };
 
         if req.uri().path() != "/favicon.ico" {

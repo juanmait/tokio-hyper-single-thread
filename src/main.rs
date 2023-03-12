@@ -10,46 +10,87 @@
 //! ```
 //!
 
-use hyper::server::conn::http1;
-use hyper::service::service_fn;
+use hyper::server::conn;
+use std::cell::Cell;
 use std::net::SocketAddr;
+use std::rc::Rc;
 use tokio::net::TcpListener;
 
-mod handler;
+use hyper::body::{Body as HttpBody, Bytes, Frame};
+use hyper::service::service_fn;
+use hyper::{Error, Response};
+use std::marker::PhantomData;
+use std::pin::Pin;
+use std::task::{Context, Poll};
 
-#[tokio::main(flavor = "current_thread")]
-pub async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
+struct Body {
+    // Our Body type is !Send and !Sync:
+    _marker: PhantomData<*const ()>,
+    data: Option<Bytes>,
+}
+
+impl From<String> for Body {
+    fn from(a: String) -> Self {
+        Body {
+            _marker: PhantomData,
+            data: Some(a.into()),
+        }
+    }
+}
+
+impl HttpBody for Body {
+    type Data = Bytes;
+    type Error = Error;
+
+    fn poll_frame(
+        self: Pin<&mut Self>,
+        _: &mut Context<'_>,
+    ) -> Poll<Option<Result<Frame<Self::Data>, Self::Error>>> {
+        Poll::Ready(self.get_mut().data.take().map(|d| Ok(Frame::data(d))))
+    }
+}
+
+fn main() -> Result<(), Box<dyn std::error::Error>> {
     pretty_env_logger::init();
 
-    // This address is localhost
+    // Configure a runtime that runs everything on the current thread
+    let rt = tokio::runtime::Builder::new_current_thread()
+        .enable_all()
+        .build()
+        .expect("build runtime");
+
+    // Combine it with a `LocalSet,  which means it can spawn !Send futures...
+    let local = tokio::task::LocalSet::new();
+    local.block_on(&rt, run())
+}
+
+async fn run() -> Result<(), Box<dyn std::error::Error>> {
     let addr: SocketAddr = ([127, 0, 0, 1], 3000).into();
 
-    // Bind to the port and listen for incoming TCP connections
+    // Using a !Send request counter is fine on 1 thread...
+    let counter = Rc::new(Cell::new(0));
+
     let listener = TcpListener::bind(addr).await?;
-    log::info!("Listening on http://{}", addr);
+    println!("Listening on http://{}", addr);
     loop {
-        // When an incoming TCP connection is received grab a TCP stream for
-        // client<->server communication.
-        //
-        // Note, this is a .await point, this loop will loop forever but is not a busy loop. The
-        // .await point allows the Tokio runtime to pull the task off of the thread until the task
-        // has work to do. In this case, a connection arrives on the port we are listening on and
-        // the task is woken up, at which point the task is then put back on a thread, and is
-        // driven forward by the runtime, eventually yielding a TCP stream.
         let (stream, _) = listener.accept().await?;
 
-        // Spin up a new task in Tokio so we can continue to listen for new TCP connection on the
-        // current task without waiting for the processing of the HTTP1 connection we just received
-        // to finish
-        tokio::task::spawn(async move {
-            // Handle the connection from the client using HTTP1 and pass any
-            // HTTP requests received on that connection to the `hello` function
-            if let Err(err) = http1::Builder::new()
-                .max_buf_size(8192)
-                .serve_connection(stream, service_fn(handler::frame))
+        // For each connection, clone the counter to use in our service...
+        let cnt = counter.clone();
+
+        let service = service_fn(move |_| {
+            let prev = cnt.get();
+            cnt.set(prev + 1);
+            let value = cnt.get();
+            async move { Ok::<_, Error>(Response::new(Body::from(format!("Request #{}", value)))) }
+        });
+
+        tokio::task::spawn_local(async move {
+            if let Err(err) = conn::http1::Builder::new()
+                .serve_connection(stream, service)
                 .await
             {
-                log::error!("Error serving connection: {:?}", err);
+                println!("Error serving connection: {:?}", err);
             }
         });
     }

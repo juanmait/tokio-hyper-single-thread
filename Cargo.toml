@@ -19,7 +19,7 @@ features = [
 
 
     # spawn child processes
-    # 'process',
+    'process',
 
     # single tread scheduler
     'rt',
@@ -61,7 +61,7 @@ features = [
     # Feature server requires http1 or http2
     # https://docs.rs/hyper/latest/hyper/server/index.html
     'http1',
-    'http2',
+    # 'http2',
 ]
 
 # https://docs.rs/http-body-util

@@ -1,7 +1,7 @@
 //! Run with
 //!
 //! ```not_rust
-//! RUST_LOG=debug cargo run --example hyper_server
+//! RUST_LOG=tokio_project=debug cargo watch -x run
 //!
 //! curl http://localhost:3000
 //!
@@ -22,6 +22,8 @@ use hyper::{Error, Response};
 use std::marker::PhantomData;
 use std::pin::Pin;
 use std::task::{Context, Poll};
+
+mod service;
 
 struct Body {
     // Our Body type is !Send and !Sync:
@@ -78,16 +80,16 @@ async fn run() -> Result<(), Box<dyn std::error::Error>> {
         // For each connection, clone the counter to use in our service...
         let cnt = counter.clone();
 
-        let service = service_fn(move |_| {
-            let prev = cnt.get();
-            cnt.set(prev + 1);
-            let value = cnt.get();
-            async move { Ok::<_, Error>(Response::new(Body::from(format!("Request #{}", value)))) }
-        });
+        // let service = service_fn(move |_| {
+        //     let prev = cnt.get();
+        //     cnt.set(prev + 1);
+        //     let value = cnt.get();
+        //     async move { Ok::<_, Error>(Response::new(Body::from(format!("Request #{}", value)))) }
+        // });
 
         tokio::task::spawn_local(async move {
             if let Err(err) = conn::http1::Builder::new()
-                .serve_connection(stream, service)
+                .serve_connection(stream, service::Svc { counter: cnt })
                 .await
             {
                 println!("Error serving connection: {:?}", err);

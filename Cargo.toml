@@ -88,3 +88,11 @@ version = "0.4"
 # https://docs.rs/url
 [dependencies.url]
 version = "2.3"
+
+# https://docs.rs/http-body
+[dependencies.http-body]
+version = "0.4"
+
+# https://docs.rs/serde_json
+[dependencies.serde_json]
+version = "1.0"

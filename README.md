@@ -1,3 +1,9 @@
+## Hyper Server
+
+```sh
+RUST_LOG=tokio_project=debug cargo watch -x run
+```
+
 ## Tokio Features
 
 All main features are listed and enabled in the `Cargo.toml` file. These can be enabled at your
@@ -36,6 +42,7 @@ Checkout the [tokio features] docs.
 | [log]               | A lightweight logging facade.                                                     |
 | [env_logger]        | A logger configured via env vars, to use with the logging facade exposed by [log] |
 | [pretty_env_logger] | Writes to standard error with nice colored output for log levels.                 |
+| [serde_json]        | -                                                                                 |
 | [tokio-macros]      | -                                                                                 |
 | [tokio]             | -                                                                                 |
 | [url]               | implementation of the URL Standard for the Rust programming language.             |
@@ -51,3 +58,4 @@ Checkout the [tokio features] docs.
 [tokio-macros]: https://docs.rs/tokio-macros
 [http-body]: https://docs.rs/http-body
 [url]: https://docs.rs/url
+[serde_json]: https://docs.rs/serde_json

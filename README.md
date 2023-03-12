@@ -36,7 +36,7 @@ Checkout the [tokio features] docs.
 | ------------------- | --------------------------------------------------------------------------------- |
 | [axum]              | -                                                                                 |
 | [bytes]             | -                                                                                 |
-| [hyper]             | -                                                                                 |
+| [hyper]             | ([examples](https://github.com/hyperium/hyper/tree/master/examples))              |
 | [http-body]         | Asynchronous HTTP request or response body                                        |
 | [http-body-util]    | Utilities for [http-body]                                                         |
 | [log]               | A lightweight logging facade.                                                     |

@@ -17,8 +17,8 @@ use std::rc::Rc;
 use tokio::net::TcpListener;
 
 use hyper::body::{Body as HttpBody, Bytes, Frame};
-use hyper::service::service_fn;
-use hyper::{Error, Response};
+
+use hyper::Error;
 use std::marker::PhantomData;
 use std::pin::Pin;
 use std::task::{Context, Poll};
@@ -73,19 +73,12 @@ async fn run() -> Result<(), Box<dyn std::error::Error>> {
     let counter = Rc::new(Cell::new(0));
 
     let listener = TcpListener::bind(addr).await?;
-    println!("Listening on http://{}", addr);
+    log::info!("Listening on http://{}", addr);
     loop {
         let (stream, _) = listener.accept().await?;
 
         // For each connection, clone the counter to use in our service...
         let cnt = counter.clone();
-
-        // let service = service_fn(move |_| {
-        //     let prev = cnt.get();
-        //     cnt.set(prev + 1);
-        //     let value = cnt.get();
-        //     async move { Ok::<_, Error>(Response::new(Body::from(format!("Request #{}", value)))) }
-        // });
 
         tokio::task::spawn_local(async move {
             if let Err(err) = conn::http1::Builder::new()

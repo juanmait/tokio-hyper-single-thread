@@ -16,9 +16,9 @@ pub struct Svc {
 impl Svc {
     const NOT_FOUND: &str = "NOT_FOUND";
 
-    fn response_full_bytes<T: AsRef<str>>(s: T) -> Result<FullBytes, hyper::Error> {
+    fn response_full_bytes<T: Into<String>>(s: T) -> Result<FullBytes, hyper::Error> {
         Ok(Response::builder()
-            .body(Full::new(Bytes::from(s.as_ref())))
+            .body(Full::new(Bytes::from(s.into())))
             .unwrap())
     }
 
@@ -26,22 +26,13 @@ impl Svc {
         Self::response_full_bytes(Self::NOT_FOUND)
     }
 
-    async fn handler(&mut self, req: Request<IncomingBody>) -> Result<FullBytes, hyper::Error> {}
-}
-
-impl Service<Request<IncomingBody>> for Svc {
-    type Response = FullBytes;
-    type Error = hyper::Error;
-    type Future = Pin<Box<dyn Future<Output = Result<Self::Response, Self::Error>>>>;
-
-    fn call(&mut self, req: Request<IncomingBody>) -> Self::Future {
+    fn handler(&mut self, req: Request<IncomingBody>) -> Result<FullBytes, hyper::Error> {
         let req_path = req.uri().path();
-
         let res = match req_path {
             "/" => Self::response_full_bytes(format!("home! counter = {:?}", self.counter)),
             _ => {
                 // Return the 404 Not Found for other routes, and don't increment counter.
-                return Box::pin(async { Self::not_found() });
+                return Self::not_found();
             }
         };
 
@@ -51,6 +42,17 @@ impl Service<Request<IncomingBody>> for Svc {
             log::info!("Increasing counter to: {}", self.counter.get());
         }
 
+        res
+    }
+}
+
+impl Service<Request<IncomingBody>> for Svc {
+    type Response = FullBytes;
+    type Error = hyper::Error;
+    type Future = Pin<Box<dyn Future<Output = Result<Self::Response, Self::Error>>>>;
+
+    fn call(&mut self, req: Request<IncomingBody>) -> Self::Future {
+        let res = self.handler(req);
         Box::pin(async { res })
     }
 }

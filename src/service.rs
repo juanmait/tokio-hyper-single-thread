@@ -1,5 +1,4 @@
 use bytes::Bytes;
-use http_body_util::Full;
 use hyper::service::Service;
 use hyper::{body::Incoming as IncomingBody, Request, Response};
 
@@ -8,7 +7,9 @@ use std::future::Future;
 use std::pin::Pin;
 use std::rc::Rc;
 
-type FullBytes = Response<Full<Bytes>>;
+use crate::body::Body;
+
+type FullBody = Response<Body>;
 pub struct Svc {
     pub counter: Rc<Cell<i32>>,
 }
@@ -16,17 +17,20 @@ pub struct Svc {
 impl Svc {
     const NOT_FOUND: &str = "NOT_FOUND";
 
-    fn response_full_bytes<T: Into<String>>(s: T) -> Result<FullBytes, hyper::Error> {
-        Ok(Response::builder()
-            .body(Full::new(Bytes::from(s.into())))
-            .unwrap())
+    fn response_full_bytes<T>(s: T) -> Result<FullBody, hyper::Error>
+    where
+        T: Into<Bytes>,
+    {
+        let b = Body::from(s);
+        let res = Response::new(b);
+        Ok(res)
     }
 
-    fn not_found() -> Result<FullBytes, hyper::Error> {
+    fn not_found() -> Result<FullBody, hyper::Error> {
         Self::response_full_bytes(Self::NOT_FOUND)
     }
 
-    fn handler(&mut self, req: Request<IncomingBody>) -> Result<FullBytes, hyper::Error> {
+    fn handler(&mut self, req: Request<IncomingBody>) -> Result<FullBody, hyper::Error> {
         let req_path = req.uri().path();
         let res = match req_path {
             "/" => Self::response_full_bytes(format!("home! counter = {:?}", self.counter)),
@@ -47,7 +51,7 @@ impl Svc {
 }
 
 impl Service<Request<IncomingBody>> for Svc {
-    type Response = FullBytes;
+    type Response = FullBody;
     type Error = hyper::Error;
     type Future = Pin<Box<dyn Future<Output = Result<Self::Response, Self::Error>>>>;
 

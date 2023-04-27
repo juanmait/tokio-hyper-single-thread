@@ -1,8 +1,26 @@
 ## Hyper Server
 
+Install [cargo-watch]:
+
+```sh
+cargo install cargo-watch
+```
+
+Run the server in dev mode:
+
 ```sh
 RUST_LOG=tokio_project=debug cargo watch -x run
 ```
+
+The goal of this project is to build a http server that runs asynchronously **in a single
+tread**, similarly as a NodeJS server would do.
+
+Similarly to a NodeJS server, this server should be able to scale horizontally by spawning new
+instances of it. A load balancer can spread the traffic across those instances.
+
+### What are the PROS of this approach vs a multi treaded version
+
+### What are the CONS of this approach vs a multi treaded version
 
 ## Tokio Features
 
@@ -59,3 +77,4 @@ Checkout the [tokio features] docs.
 [http-body]: https://docs.rs/http-body
 [url]: https://docs.rs/url
 [serde_json]: https://docs.rs/serde_json
+[cargo-watch]: https://crates.io/crates/cargo-watch

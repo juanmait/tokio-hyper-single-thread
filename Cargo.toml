@@ -44,8 +44,6 @@ features = [
     'mio', # low-level I/O features
 ]
 
-[dependencies.axum]
-version = '0.6.10'
 
 [dependencies.hyper]
 version = '1.0.0-rc.3'
@@ -61,7 +59,7 @@ features = [
     # Feature server requires http1 or http2
     # https://docs.rs/hyper/latest/hyper/server/index.html
     'http1',
-    # 'http2',
+    'http2',
 ]
 
 # https://docs.rs/http-body-util
@@ -97,3 +95,7 @@ version = "0.4"
 # https://docs.rs/serde_json
 [dependencies.serde_json]
 version = "1.0"
+
+# Axum is used in some examples
+[dev-dependencies.axum]
+version = '0.6.10'

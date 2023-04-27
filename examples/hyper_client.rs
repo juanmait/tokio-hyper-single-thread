@@ -34,7 +34,7 @@ async fn main() -> Result<()> {
 
     // HTTPS requires picking a TLS implementation, so give a better
     // warning if the user tries to request an 'https' URL.
-    let url = url.parse::<hyper::Uri>().unwrap();
+    let url: hyper::Uri = url.parse::<hyper::Uri>().unwrap();
     if url.scheme_str() != Some("http") {
         println!("This example only works with 'http' URLs.");
         return Ok(());

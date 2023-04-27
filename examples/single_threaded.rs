@@ -1,5 +1,13 @@
 #![deny(warnings)]
 
+/// Run this example:
+///
+/// This example needs to have TLS support, currently the requests cannot be handled without it.
+///
+/// ```sh
+/// cargo run --example single_threaded
+/// ```
+///
 use hyper::server::conn::http2;
 use std::cell::Cell;
 use std::net::SocketAddr;
@@ -65,6 +73,8 @@ async fn run() -> Result<(), Box<dyn std::error::Error>> {
     loop {
         let (stream, _) = listener.accept().await?;
 
+        println!("accepted connection");
+
         // For each connection, clone the counter to use in our service...
         let cnt = counter.clone();
 
@@ -72,6 +82,7 @@ async fn run() -> Result<(), Box<dyn std::error::Error>> {
             let prev = cnt.get();
             cnt.set(prev + 1);
             let value = cnt.get();
+            println!("count: {}", value);
             async move { Ok::<_, Error>(Response::new(Body::from(format!("Request #{}", value)))) }
         });
 

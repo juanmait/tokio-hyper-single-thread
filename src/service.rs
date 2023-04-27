@@ -1,6 +1,6 @@
 use bytes::Bytes;
 use hyper::service::Service;
-use hyper::{body::Incoming as IncomingBody, Request, Response};
+use hyper::{body::Incoming, Request, Response};
 
 use std::cell::Cell;
 use std::future::Future;
@@ -10,6 +10,8 @@ use std::rc::Rc;
 use crate::body::Body;
 
 type FullBody = Response<Body>;
+
+/// Svc is a struct that implements the [hyper::service::Service] trait.
 pub struct Svc {
     pub counter: Rc<Cell<i32>>,
 }
@@ -30,17 +32,24 @@ impl Svc {
         Self::response_full_bytes(Self::NOT_FOUND)
     }
 
-    fn handler(&mut self, req: Request<IncomingBody>) -> Result<FullBody, hyper::Error> {
-        let req_path = req.uri().path();
-        let res = match req_path {
-            "/" => Self::response_full_bytes(format!("home! counter = {:?}", self.counter)),
+    fn home(&mut self, _: Request<Incoming>) -> Result<FullBody, hyper::Error> {
+        Self::response_full_bytes(format!("home! counter = {:?}", self.counter))
+    }
+
+    fn route(&mut self, req: Request<Incoming>) -> Result<FullBody, hyper::Error> {
+        let mut handled = false;
+        let res = match req.uri().path() {
+            "/" => {
+                handled = true;
+                self.home(req)
+            }
             _ => {
                 // Return the 404 Not Found for other routes, and don't increment counter.
                 return Self::not_found();
             }
         };
 
-        if req_path != "/favicon.ico" {
+        if handled {
             let prev = self.counter.get();
             self.counter.set(prev + 1);
             log::info!("Increasing counter to: {}", self.counter.get());
@@ -50,13 +59,13 @@ impl Svc {
     }
 }
 
-impl Service<Request<IncomingBody>> for Svc {
+impl Service<Request<Incoming>> for Svc {
     type Response = FullBody;
     type Error = hyper::Error;
     type Future = Pin<Box<dyn Future<Output = Result<Self::Response, Self::Error>>>>;
 
-    fn call(&mut self, req: Request<IncomingBody>) -> Self::Future {
-        let res = self.handler(req);
+    fn call(&mut self, req: Request<Incoming>) -> Self::Future {
+        let res = self.route(req);
         Box::pin(async { res })
     }
 }

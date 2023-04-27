@@ -5,8 +5,10 @@ use hyper::body::Frame;
 use hyper::Error;
 use std::task::{Context, Poll};
 
+/// see [examples/single_threaded.rs](https://github.com/hyperium/hyper/blob/afe278abe077cf85a29b6631b838cd335f50d30d/examples/single_threaded.rs#L31)
 pub struct Body {
-    // Our Body type is !Send and !Sync:
+    // Force Body to be of type !Send and !Sync.
+    // we use a phantom pointer `*const T`
     _marker: PhantomData<*const ()>,
     data: Option<Bytes>,
 }

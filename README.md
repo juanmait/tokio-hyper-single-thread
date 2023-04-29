@@ -1,5 +1,10 @@
 ## Hyper Server
 
+Main goal of this project is to use the async layers `tokio -> hyper -> tower` to create an
+asynchronous http server that runs **in a single tread**.
+
+## Run the server in dev mode
+
 Install [cargo-watch]:
 
 ```sh
@@ -12,37 +17,18 @@ Run the server in dev mode:
 RUST_LOG=tokio_project=debug cargo watch -x run
 ```
 
-The goal of this project is to build a http server that runs asynchronously **in a single
-tread**, similarly as a NodeJS server would do.
+**Next Goals**
 
-Similarly to a NodeJS server, this server should be able to scale horizontally by spawning new
-instances of it. A load balancer can spread the traffic across those instances.
-
-### What are the PROS of this approach vs a multi treaded version
-
-### What are the CONS of this approach vs a multi treaded version
+-   integrate some benchmarking tools
+-   support https
+-   support http2
+-   integrate rust docs generation
+-   support multithreading (can be an interesting challenge to make things `Send + Sync`).
 
 ## Tokio Features
 
 All main features are listed and enabled in the `Cargo.toml` file. These can be enabled at your
 discretion.
-
-```toml
-'fs',                   # Async file system access
-'io-util',              # enable tokio_util::io
-'io-std',               # enable tokio::io
-'macros',               # Tokio macros
-'net',                  # TCP/UDP/Unix bindings
-'parking_lot',          # enable parkin_lot crate
-'process',              # spawn child processes
-'rt',                   # single tread scheduler
-'rt-multi-thread',      # multi tread scheduler
-'signal',               # handle system signals
-'sync',                 # enable tokio::sync
-'time',                 # enable tokio::time
-'tracing',              # enable tracing crate
-'mio',                  # low-level I/O features
-```
 
 Checkout the [tokio features] docs.
 
@@ -63,6 +49,8 @@ Checkout the [tokio features] docs.
 | [serde_json]        | -                                                                                 |
 | [tokio-macros]      | -                                                                                 |
 | [tokio]             | -                                                                                 |
+| [tower]             |                                                                                   |
+| [tower-http]        |                                                                                   |
 | [url]               | implementation of the URL Standard for the Rust programming language.             |
 
 [hyper]: https://docs.rs/hyper
@@ -78,3 +66,5 @@ Checkout the [tokio features] docs.
 [url]: https://docs.rs/url
 [serde_json]: https://docs.rs/serde_json
 [cargo-watch]: https://crates.io/crates/cargo-watch
+[tower]: https://docs.rs/tower/latest/tower/
+[tower-http]: https://docs.rs/tower-http/latest/tower_http

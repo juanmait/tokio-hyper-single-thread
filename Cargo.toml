@@ -2,6 +2,11 @@
 name = 'tokio-project'
 version = '0.1.0'
 edition = '2021'
+
+[dependencies]
+tower-http = "0.4.0"
+tower = "0.4.13"
+
 [dependencies.tokio]
 version = '1'
 features = [
@@ -44,7 +49,6 @@ features = [
     'mio', # low-level I/O features
 ]
 
-
 [dependencies.hyper]
 version = '1.0.0-rc.3'
 features = [
@@ -78,7 +82,6 @@ version = '1.4.0'
 # This crate uses env_logger internally,
 [dependencies.pretty_env_logger]
 version = "0.4.0"
-
 
 # https://docs.rs/log
 [dependencies.log]

@@ -9,9 +9,6 @@ use std::rc::Rc;
 
 use crate::body::Body;
 
-type FullBody = Response<Body>;
-
-/// Svc is a struct that implements the [hyper::service::Service] trait.
 pub struct Svc {
     pub counter: Rc<Cell<i32>>,
 }
@@ -19,7 +16,7 @@ pub struct Svc {
 impl Svc {
     const NOT_FOUND: &str = "NOT_FOUND";
 
-    fn response_full_bytes<T>(s: T) -> Result<FullBody, hyper::Error>
+    fn response_full_bytes<T>(s: T) -> Result<Response<Body>, hyper::Error>
     where
         T: Into<Bytes>,
     {
@@ -28,17 +25,18 @@ impl Svc {
         Ok(res)
     }
 
-    fn not_found() -> Result<FullBody, hyper::Error> {
+    fn not_found() -> Result<Response<Body>, hyper::Error> {
         Self::response_full_bytes(Self::NOT_FOUND)
     }
 
-    fn home(&mut self, _: Request<Incoming>) -> Result<FullBody, hyper::Error> {
+    fn home(&mut self, _: Request<Incoming>) -> Result<Response<Body>, hyper::Error> {
         Self::response_full_bytes(format!("home! counter = {:?}", self.counter))
     }
 
-    fn route(&mut self, req: Request<Incoming>) -> Result<FullBody, hyper::Error> {
+    fn route(&mut self, req: Request<Incoming>) -> Result<Response<Body>, hyper::Error> {
         let mut handled = false;
-        let res = match req.uri().path() {
+        let path = req.uri().path();
+        let res = match path {
             "/" => {
                 handled = true;
                 self.home(req)
@@ -59,8 +57,14 @@ impl Svc {
     }
 }
 
+/// Implement the Service trait for our Service.
+///
+/// > A Service is a function of a Request.
+///
+/// https://docs.rs/hyper/latest/hyper/service/trait.Service.html
+/// https://docs.rs/tower/latest/tower/trait.Service.html
 impl Service<Request<Incoming>> for Svc {
-    type Response = FullBody;
+    type Response = Response<Body>;
     type Error = hyper::Error;
     type Future = Pin<Box<dyn Future<Output = Result<Self::Response, Self::Error>>>>;
 

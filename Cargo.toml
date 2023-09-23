@@ -20,7 +20,7 @@ features = [
 
     # Enable crate (https://docs.rs/parking_lot).
     # Faster and smaller implementations of Mutex, RwLock, Condvar and Once
-    'parking_lot',
+    # 'parking_lot',
 
 
     # spawn child processes

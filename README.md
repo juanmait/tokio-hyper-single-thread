@@ -1,9 +1,39 @@
 ## Hyper Server
 
-Main goal of this project is to use the async layers `tokio -> hyper -> tower` to create an
-asynchronous http server that runs **in a single tread**.
+The goal of this project is to experiment with tokio -> hyper to create an asynchronous http server
+that runs **in a single tread**. It is also using experimental hyper version
+[`1.0.0-rc.3`](https://github.com/hyperium/hyper/blob/master/CHANGELOG.md#v100-rc3-2023-02-23).
 
-## Run the server in dev mode
+## Run the server in release mode
+
+```sh
+cargo run --release
+```
+
+## Benchmarks
+
+If [`wrk`](https://github.com/wg/wrk) is available you can test the performance of the server like
+this:
+
+```sh
+# threads: 1
+# open connections: 1
+# run for 10s
+wrk -t1 -c1 -d10s http://127.0.0.1:3000
+```
+
+There is also a plain nodejs http server available in `./node/server.js` you can use to compare the
+performance between the two.
+
+```bash
+# start the server
+node node/server.js --port 4032
+
+# run the benchmark
+wrk -t1 -c1 -d10s http://127.0.0.1:4032
+```
+
+## Dev mode
 
 Install [cargo-watch]:
 
@@ -11,10 +41,10 @@ Install [cargo-watch]:
 cargo install cargo-watch
 ```
 
-Run the server in dev mode:
+Run the server in dev mode with tracing in debug level:
 
 ```sh
-RUST_LOG=tokio_project=debug cargo watch -x run
+RUST_LOG=tokio_project=debug cargo watch -w src -x run
 ```
 
 **Next Goals**
@@ -23,7 +53,6 @@ RUST_LOG=tokio_project=debug cargo watch -x run
 -   support https
 -   support http2
 -   integrate rust docs generation
--   support multithreading (can be an interesting challenge to make things `Send + Sync`).
 
 ## Tokio Features
 

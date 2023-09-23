@@ -15,7 +15,6 @@ use std::cell::Cell;
 use std::net::SocketAddr;
 use std::rc::Rc;
 use tokio::net::TcpListener;
-use tower::ServiceBuilder;
 
 mod body;
 mod service;
@@ -38,11 +37,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 async fn run() -> Result<(), Box<dyn std::error::Error>> {
     let addr: SocketAddr = ([127, 0, 0, 1], 3000).into();
 
-    // Using a !Send request counter is fine on 1 thread...
-
     let listener = TcpListener::bind(addr).await?;
     log::info!("Listening on http://{}", addr);
 
+    // Using a !Send request counter is fine on 1 thread...
     let counter = Rc::new(Cell::new(0));
 
     loop {
@@ -54,18 +52,27 @@ async fn run() -> Result<(), Box<dyn std::error::Error>> {
 
         // For each connection, clone the counter to use in our service...
         let cnt = counter.clone();
-        tokio::task::spawn_local(async move {
+        let cnt1 = counter.clone();
+        let service = service::Svc { counter: cnt };
+
+        let result = tokio::task::spawn_local(async move {
             log::debug!("new local task spawn");
 
-            let srv = ServiceBuilder::new().service(service::Svc { counter: cnt });
+            let connection = conn::http1::Builder::new();
 
-            let connection_builder = conn::http1::Builder::new();
             // https://docs.rs/hyper/1.0.0-rc.3/hyper/server/conn/http1/struct.Builder.html#method.serve_connection
-            let conn_result = connection_builder.serve_connection(stream, srv).await;
+            let conn_result = connection.serve_connection(stream, service).await;
 
             if let Err(err) = conn_result {
-                println!("Error serving connection: {:?}", err);
+                eprintln!("Error serving connection ({:?}): {:?}", cnt1, err);
+                panic!();
             }
-        });
+        })
+        .await;
+
+        match result {
+            Ok(_) => println!("all went well: {:?}", counter.clone()),
+            Err(e) => println!("Something went wrong serving a request. {:?}", e),
+        }
     }
 }

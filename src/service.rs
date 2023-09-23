@@ -9,6 +9,7 @@ use std::rc::Rc;
 
 use crate::body::Body;
 
+/// Svc implements [hyper::service::Service]
 pub struct Svc {
     pub counter: Rc<Cell<i32>>,
 }
@@ -16,11 +17,11 @@ pub struct Svc {
 impl Svc {
     const NOT_FOUND: &str = "NOT_FOUND";
 
-    fn response_full_bytes<T>(s: T) -> Result<Response<Body>, hyper::Error>
+    fn response_full_bytes<T>(into_bytes: T) -> Result<Response<Body>, hyper::Error>
     where
         T: Into<Bytes>,
     {
-        let b = Body::from(s);
+        let b = Body::from(into_bytes);
         let res = Response::new(b);
         Ok(res)
     }
@@ -62,7 +63,6 @@ impl Svc {
 /// > A Service is a function of a Request.
 ///
 /// https://docs.rs/hyper/latest/hyper/service/trait.Service.html
-/// https://docs.rs/tower/latest/tower/trait.Service.html
 impl Service<Request<Incoming>> for Svc {
     type Response = Response<Body>;
     type Error = hyper::Error;

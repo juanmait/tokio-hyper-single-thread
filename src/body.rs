@@ -14,10 +14,10 @@ pub struct Body {
 }
 
 impl<T: Into<Bytes>> From<T> for Body {
-    fn from(a: T) -> Self {
+    fn from(bytes: T) -> Self {
         Body {
             _marker: PhantomData,
-            data: Some(a.into()),
+            data: Some(bytes.into()),
         }
     }
 }
@@ -30,9 +30,17 @@ impl hyper::body::Body for Body {
         self: Pin<&mut Self>,
         _: &mut Context<'_>,
     ) -> Poll<Option<Result<Frame<Self::Data>, Self::Error>>> {
-        log::debug!("Pooling data...");
+        log::debug!("Body::pool_frame() pooling data...");
+
         let data = self.get_mut().data.take();
-        let frame = data.map(|d| Ok(Frame::data(d)));
+
+        let frame = data.map(|d| {
+            let frame = Frame::data(d);
+            log::debug!("Frame is data: {}", frame.is_data());
+            log::debug!("Frame is trailers: {}", frame.is_trailers());
+            Ok(frame)
+        });
+
         Poll::Ready(frame)
     }
 }

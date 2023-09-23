@@ -4,8 +4,6 @@ version = '0.1.0'
 edition = '2021'
 
 [dependencies]
-tower-http = "0.4.0"
-tower = "0.4.13"
 
 [dependencies.tokio]
 version = '1'
@@ -94,11 +92,3 @@ version = "2.3"
 # https://docs.rs/http-body
 [dependencies.http-body]
 version = "0.4"
-
-# https://docs.rs/serde_json
-[dependencies.serde_json]
-version = "1.0"
-
-# Axum is used in some examples
-[dev-dependencies.axum]
-version = '0.6.10'

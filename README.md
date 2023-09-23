@@ -71,7 +71,6 @@ wrk -t1 -c1 -d10s http://127.0.0.1:4032
 
 | Crate               | Description                                                                       |
 | ------------------- | --------------------------------------------------------------------------------- |
-| [axum]              | -                                                                                 |
 | [bytes]             | -                                                                                 |
 | [env_logger]        | A logger configured via env vars, to use with the logging facade exposed by [log] |
 | [hyper]             | ([examples](https://github.com/hyperium/hyper/tree/master/examples))              |
@@ -79,14 +78,11 @@ wrk -t1 -c1 -d10s http://127.0.0.1:4032
 | [http-body-util]    | Utilities for [http-body]                                                         |
 | [log]               | A lightweight logging facade.                                                     |
 | [pretty_env_logger] | Writes to standard error with nice colored output for log levels.                 |
-| [serde_json]        | -                                                                                 |
 | [tokio-macros]      | -                                                                                 |
 | [tokio]             | -                                                                                 |
-| [tower]             |                                                                                   |
 | [tower-http]        |                                                                                   |
 | [url]               | implementation of the URL Standard for the Rust programming language.             |
 
-[axum]: https://docs.rs/axum
 [bytes]: https://docs.rs/bytes
 [cargo-watch]: https://crates.io/crates/cargo-watch
 [env_logger]: https://docs.rs/env_logger
@@ -96,10 +92,7 @@ wrk -t1 -c1 -d10s http://127.0.0.1:4032
 [log]: https://docs.rs/log
 [pretty_env_logger]: https://docs.rs/pretty_env_logger
 [rustdoc]: https://doc.rust-lang.org/rustdoc/index.html
-[serde_json]: https://docs.rs/serde_json
 [tokio]: https://docs.rs/tokio
 [tokio features]: https://docs.rs/crate/tokio/latest/features
 [tokio-macros]: https://docs.rs/tokio-macros
-[tower]: https://docs.rs/tower/latest/tower/
-[tower-http]: https://docs.rs/tower-http/latest/tower_http
 [url]: https://docs.rs/url

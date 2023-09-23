@@ -1,7 +1,7 @@
-## Hyper Server
+## Example Tokio Single Thread
 
-The goal of this project is to experiment with tokio -> hyper to create an asynchronous http server
-that runs **in a single tread**. It is also using experimental hyper version
+The goal of this project is to experiment with [tokio] & [hyper] creating an asynchronous http
+server that runs **in a single tread**. Also, is using an experimental hyper version
 [`1.0.0-rc.3`](https://github.com/hyperium/hyper/blob/master/CHANGELOG.md#v100-rc3-2023-02-23).
 
 ## Run the server in release mode

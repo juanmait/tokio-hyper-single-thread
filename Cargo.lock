@@ -121,6 +121,24 @@ dependencies = [
 ]
 
 [[package]]
+name = "example-tokio-single-thread"
+version = "0.1.0"
+dependencies = [
+ "axum",
+ "bytes",
+ "http-body 0.4.5",
+ "http-body-util",
+ "hyper 1.0.0-rc.3",
+ "log",
+ "pretty_env_logger",
+ "serde_json",
+ "tokio",
+ "tower",
+ "tower-http",
+ "url",
+]
+
+[[package]]
 name = "fnv"
 version = "1.0.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -693,24 +711,6 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn",
-]
-
-[[package]]
-name = "tokio-project"
-version = "0.1.0"
-dependencies = [
- "axum",
- "bytes",
- "http-body 0.4.5",
- "http-body-util",
- "hyper 1.0.0-rc.3",
- "log",
- "pretty_env_logger",
- "serde_json",
- "tokio",
- "tower",
- "tower-http",
- "url",
 ]
 
 [[package]]

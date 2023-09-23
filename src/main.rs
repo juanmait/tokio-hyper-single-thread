@@ -1,7 +1,7 @@
 //! Run with
 //!
 //! ```not_rust
-//! RUST_LOG=tokio_project=debug cargo watch -x run
+//! RUST_LOG=example_tokio_single_thread=debug cargo watch -x run
 //!
 //! curl http://localhost:3000
 //!

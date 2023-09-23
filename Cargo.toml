@@ -1,5 +1,5 @@
 [package]
-name = 'tokio-project'
+name = 'example-tokio-single-thread'
 version = '0.1.0'
 edition = '2021'
 

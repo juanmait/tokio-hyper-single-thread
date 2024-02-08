@@ -15,7 +15,7 @@ pub struct Svc {
 }
 
 impl Svc {
-    const NOT_FOUND: &str = "NOT_FOUND";
+    const NOT_FOUND: &'static str = "NOT_FOUND";
 
     fn response_full_bytes<T>(into_bytes: T) -> Result<Response<Body>, hyper::Error>
     where
@@ -30,11 +30,11 @@ impl Svc {
         Self::response_full_bytes(Self::NOT_FOUND)
     }
 
-    fn home(&mut self, _: Request<Incoming>) -> Result<Response<Body>, hyper::Error> {
+    fn home(&self, _: Request<Incoming>) -> Result<Response<Body>, hyper::Error> {
         Self::response_full_bytes(format!("home! counter = {:?}", self.counter))
     }
 
-    fn route(&mut self, req: Request<Incoming>) -> Result<Response<Body>, hyper::Error> {
+    fn route(&self, req: Request<Incoming>) -> Result<Response<Body>, hyper::Error> {
         let mut handled = false;
         let path = req.uri().path();
         let res = match path {
@@ -68,7 +68,7 @@ impl Service<Request<Incoming>> for Svc {
     type Error = hyper::Error;
     type Future = Pin<Box<dyn Future<Output = Result<Self::Response, Self::Error>>>>;
 
-    fn call(&mut self, req: Request<Incoming>) -> Self::Future {
+    fn call(&self, req: Request<Incoming>) -> Self::Future {
         let res = self.route(req);
         Box::pin(async { res })
     }

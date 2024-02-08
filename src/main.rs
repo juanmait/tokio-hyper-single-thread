@@ -11,6 +11,7 @@
 //!
 
 use hyper::server::conn;
+use hyper_util::rt::tokio::TokioIo;
 use std::cell::Cell;
 use std::net::SocketAddr;
 use std::rc::Rc;
@@ -60,19 +61,21 @@ async fn run() -> Result<(), Box<dyn std::error::Error>> {
 
             let connection = conn::http1::Builder::new();
 
-            // https://docs.rs/hyper/1.0.0-rc.3/hyper/server/conn/http1/struct.Builder.html#method.serve_connection
-            let conn_result = connection.serve_connection(stream, service).await;
+            // https://docs.rs/hyper/latest/hyper/server/conn/http1/struct.Builder.html#method.serve_connection
+            let conn_result = connection
+                .serve_connection(TokioIo::new(stream), service)
+                .await;
 
             if let Err(err) = conn_result {
-                eprintln!("Error serving connection ({:?}): {:?}", cnt1, err);
+                log::error!("Error serving connection ({:?}): {:?}", cnt1, err);
                 panic!();
             }
         })
         .await;
 
         match result {
-            Ok(_) => println!("all went well: {:?}", counter.clone()),
-            Err(e) => println!("Something went wrong serving a request. {:?}", e),
+            Ok(_) => log::info!("Request number {} served OK.", counter.clone().get()),
+            Err(e) => log::error!("Something went wrong serving a request. {:?}", e),
         }
     }
 }

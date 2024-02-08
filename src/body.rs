@@ -36,8 +36,12 @@ impl hyper::body::Body for Body {
 
         let frame = data.map(|d| {
             let frame = Frame::data(d);
-            log::debug!("Frame is data: {}", frame.is_data());
-            log::debug!("Frame is trailers: {}", frame.is_trailers());
+            log::debug!(
+                "Frame is_data/is_trailers: {}/{}",
+                frame.is_data(),
+                frame.is_trailers()
+            );
+
             Ok(frame)
         });
 

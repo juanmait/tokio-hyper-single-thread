@@ -1,8 +1,7 @@
 # Example Tokio Single Thread
 
 The goal of this project is to experiment with [tokio] & [hyper] creating an asynchronous http
-server that runs **in a single tread**. Also, is using an experimental hyper version
-[`1.0.0-rc.3`](https://github.com/hyperium/hyper/blob/master/CHANGELOG.md#v100-rc3-2023-02-23).
+server that runs **in a single tread**.
 
 ## Run in Release Mode
 
@@ -39,7 +38,7 @@ RUST_LOG=example_tokio_single_thread=debug cargo watch -w src -x run
 If [`wrk`](https://github.com/wg/wrk) is available you can test the performance of the server like
 this:
 
-NOTE: **First the rust server in `--release` mode for performance tests**
+NOTE: **First run the rust server in `--release` mode for performance tests**
 
 ```sh
 # threads: 1
@@ -65,22 +64,20 @@ wrk -t1 -c1 -d10s http://127.0.0.1:4032
 -   support https & http2
 -   generate [rustdoc] documentation
 
-
-
 ## Ecosystem
 
 | Crate               | Description                                                                       |
 | ------------------- | --------------------------------------------------------------------------------- |
-| [bytes]             | -                                                                                 |
+| [bytes]             | _Provides abstractions for working with bytes._                                   |
 | [env_logger]        | A logger configured via env vars, to use with the logging facade exposed by [log] |
-| [hyper]             | ([examples](https://github.com/hyperium/hyper/tree/master/examples))              |
+| [hyper]             | (see [examples](https://github.com/hyperium/hyper/tree/master/examples))          |
+| [hyper-util]        | Utilities for [hyper]                                                             |
 | [http-body]         | Asynchronous HTTP request or response body                                        |
 | [http-body-util]    | Utilities for [http-body]                                                         |
 | [log]               | A lightweight logging facade.                                                     |
 | [pretty_env_logger] | Writes to standard error with nice colored output for log levels.                 |
 | [tokio-macros]      | -                                                                                 |
 | [tokio]             | -                                                                                 |
-| [tower-http]        |                                                                                   |
 | [url]               | implementation of the URL Standard for the Rust programming language.             |
 
 [bytes]: https://docs.rs/bytes
@@ -89,6 +86,7 @@ wrk -t1 -c1 -d10s http://127.0.0.1:4032
 [http-body]: https://docs.rs/http-body
 [http-body-util]: https://docs.rs/http-body-util
 [hyper]: https://docs.rs/hyper
+[hyper-util]: https://docs.rs/hyper-util
 [log]: https://docs.rs/log
 [pretty_env_logger]: https://docs.rs/pretty_env_logger
 [rustdoc]: https://doc.rust-lang.org/rustdoc/index.html

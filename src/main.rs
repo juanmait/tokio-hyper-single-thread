@@ -27,7 +27,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let rt = tokio::runtime::Builder::new_current_thread()
         .enable_all()
         .build()
-        .expect("build runtime");
+        .expect("failed building single thread runtime");
 
     // combine it with a `LocalSet, which means it can spawn `!Send` futures.
     let local_set = tokio::task::LocalSet::new();
@@ -45,37 +45,48 @@ async fn run() -> Result<(), Box<dyn std::error::Error>> {
     let counter = Rc::new(Cell::new(0));
 
     loop {
+        counter.set(counter.get() + 1);
         // non keep-alive connections will result in a new spawn
         // whereas keep-alive connections will reuse previous spawned services
-        let (stream, _) = listener.accept().await?;
+        let (stream, _remote_addr) = listener.accept().await?;
 
         log::debug!("new stream accepted");
 
         // For each connection, clone the counter to use in our service...
-        let cnt = counter.clone();
-        let cnt1 = counter.clone();
-        let service = service::Svc { counter: cnt };
+        let counter_for_service = counter.clone();
+        // We need another copy to report errors
+        let counter_for_err_report = counter.clone();
 
-        let result = tokio::task::spawn_local(async move {
-            log::debug!("new local task spawn");
+        let mut connection = conn::http1::Builder::new();
 
-            let connection = conn::http1::Builder::new();
+        let join = tokio::task::spawn_local(async move {
+            log::debug!("spawned new local task");
 
-            // https://docs.rs/hyper/latest/hyper/server/conn/http1/struct.Builder.html#method.serve_connection
-            let conn_result = connection
-                .serve_connection(TokioIo::new(stream), service)
-                .await;
+            connection
+                .keep_alive(false)
+                .serve_connection(
+                    // Since `serve_connection` need something that implements hyper's IO traits Read & Write, and
+                    // our `stream` is a tokio TcpStream that instead implements tokio's IO traits AsyncRead & AsyncWrite,
+                    // we use the hyper utility struct `TokioIo` to act as a bridge between the two different IO implementations.
+                    //
+                    // `TokioIo` implements the needed  hyper's IO traits by calling the tokio's IO implementation internally.
+                    // https://docs.rs/hyper/latest/hyper/server/conn/http1/struct.Builder.html#method.serve_connection
+                    TokioIo::new(stream),
+                    // hyper service
+                    service::RouterService {
+                        counter: counter_for_service,
+                    },
+                )
+                .await
+        });
 
-            if let Err(err) = conn_result {
-                log::error!("Error serving connection ({:?}): {:?}", cnt1, err);
-                panic!();
-            }
-        })
-        .await;
-
-        match result {
-            Ok(_) => log::info!("Request number {} served OK.", counter.clone().get()),
-            Err(e) => log::error!("Something went wrong serving a request. {:?}", e),
+        match join.await {
+            Ok(_) => log::info!("Request number #{} completed OK.", counter.clone().get()),
+            Err(e) => log::error!(
+                "Something went wrong within a main local async task #{}: {:?}",
+                counter_for_err_report.get(),
+                e
+            ),
         }
     }
 }

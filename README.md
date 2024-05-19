@@ -27,7 +27,7 @@ Install [cargo-watch]:
 cargo install cargo-watch
 ```
 
-Run the server in dev mode with tracing in debug level:
+Watch the server in dev mode with tracing in debug level:
 
 ```sh
 RUST_LOG=example_tokio_single_thread=debug cargo watch -w src -x run
